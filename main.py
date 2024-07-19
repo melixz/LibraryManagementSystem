@@ -1,4 +1,5 @@
 import json
+import uuid
 
 
 class Book:
@@ -29,3 +30,11 @@ class Book:
     def save_books_to_file(filename, books):
         with open(filename, 'w', encoding='utf-8') as file:
             json.dump([book.to_dict() for book in books], file, ensure_ascii=False, indent=4)
+
+    def add_book(title, author, year):
+        books = load_books_from_file("library.json")
+        book_id = str(uuid.uuid4())
+        new_book = Book(book_id, title, author, year)
+        books.append(new_book)
+        save_books_to_file("library.json", books)
+        print("Книга успешно добавлена.")
