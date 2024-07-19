@@ -1,3 +1,4 @@
+import json
 
 
 class Book:
@@ -16,3 +17,15 @@ class Book:
             "year": self.year,
             "status": self.status
         }
+
+    def load_books_from_file(filename):
+        try:
+            with open(filename, 'r', encoding='utf-8') as file:
+                books_data = json.load(file)
+                return [Book(**data) for data in books_data]
+        except FileNotFoundError:
+            return []
+
+    def save_books_to_file(filename, books):
+        with open(filename, 'w', encoding='utf-8') as file:
+            json.dump([book.to_dict() for book in books], file, ensure_ascii=False, indent=4)
