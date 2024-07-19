@@ -65,3 +65,13 @@ class Book:
         for book in books:
             print(
                 f"ID: {book.id}, Title: {book.title}, Author: {book.author}, Year: {book.year}, Status: {book.status}")
+
+    def change_status(book_id, new_status):
+        books = load_books_from_file("library.json")
+        for book in books:
+            if book.id == book_id:
+                book.status = new_status
+                save_books_to_file("library.json", books)
+                print("Статус книги успешно изменен.")
+                return
+        print("Книга с таким ID не найдена.")
