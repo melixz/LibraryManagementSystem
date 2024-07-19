@@ -1,9 +1,21 @@
-import json
 import uuid
+import json
 
 
 class Book:
-    def __init__(self, id, title, author, year, status="available"):
+    """Класс для представления книги в библиотеке."""
+
+    def __init__(self, id, title, author, year, status="в наличии"):
+        """
+        Инициализация книги.
+
+        Args:
+            id (str): Уникальный идентификатор книги.
+            title (str): Название книги.
+            author (str): Автор книги.
+            year (str): Год издания книги.
+            status (str): Статус книги. По умолчанию "в наличии".
+        """
         self.id = id
         self.title = title
         self.author = author
@@ -11,6 +23,12 @@ class Book:
         self.status = status
 
     def to_dict(self):
+        """
+        Преобразование объекта книги в словарь.
+
+        Returns:
+            dict: Словарь с данными книги.
+        """
         return {
             "id": self.id,
             "title": self.title,
@@ -21,6 +39,15 @@ class Book:
 
 
 def load_books_from_file(filename):
+    """
+    Загрузка книг из файла.
+
+    Args:
+        filename (str): Имя файла для загрузки данных.
+
+    Returns:
+        list: Список объектов Book.
+    """
     try:
         with open(filename, 'r', encoding='utf-8') as file:
             books_data = json.load(file)
@@ -30,11 +57,26 @@ def load_books_from_file(filename):
 
 
 def save_books_to_file(filename, books):
+    """
+    Сохранение книг в файл.
+
+    Args:
+        filename (str): Имя файла для сохранения данных.
+        books (list): Список объектов Book для сохранения.
+    """
     with open(filename, 'w', encoding='utf-8') as file:
         json.dump([book.to_dict() for book in books], file, ensure_ascii=False, indent=4)
 
 
 def add_book(title, author, year):
+    """
+    Добавление книги в библиотеку.
+
+    Args:
+        title (str): Название книги.
+        author (str): Автор книги.
+        year (str): Год издания книги.
+    """
     books = load_books_from_file("library.json")
     book_id = str(uuid.uuid4())
     new_book = Book(book_id, title, author, year)
@@ -44,6 +86,12 @@ def add_book(title, author, year):
 
 
 def delete_book(book_id):
+    """
+    Удаление книги из библиотеки по ID.
+
+    Args:
+        book_id (str): Уникальный идентификатор книги.
+    """
     books = load_books_from_file("library.json")
     books = [book for book in books if book.id != book_id]
     save_books_to_file("library.json", books)
@@ -51,6 +99,16 @@ def delete_book(book_id):
 
 
 def search_books(query, search_by):
+    """
+    Поиск книг в библиотеке.
+
+    Args:
+        query (str): Поисковый запрос.
+        search_by (str): Поле для поиска (title, author, year).
+
+    Returns:
+        list: Список найденных книг.
+    """
     books = load_books_from_file("library.json")
     if search_by == "title":
         results = [book for book in books if query.lower() in book.title.lower()]
@@ -60,20 +118,29 @@ def search_books(query, search_by):
         results = [book for book in books if book.year == query]
     else:
         print("Неверный параметр поиска.")
-        return
+        return []
     for book in results:
-        print(
-            f"ID: {book.id}, Title: {book.title}, Author: {book.author}, Year: {book.year}, Status: {book.status}")
+        print(f"ID: {book.id}, Title: {book.title}, Author: {book.author}, Year: {book.year}, Status: {book.status}")
+    return results
 
 
 def display_books():
+    """
+    Отображение всех книг в библиотеке.
+    """
     books = load_books_from_file("library.json")
     for book in books:
-        print(
-            f"ID: {book.id}, Title: {book.title}, Author: {book.author}, Year: {book.year}, Status: {book.status}")
+        print(f"ID: {book.id}, Title: {book.title}, Author: {book.author}, Year: {book.year}, Status: {book.status}")
 
 
 def change_status(book_id, new_status):
+    """
+    Изменение статуса книги в библиотеке.
+
+    Args:
+        book_id (str): Уникальный идентификатор книги.
+        new_status (str): Новый статус книги ("в наличии" или "выдана").
+    """
     books = load_books_from_file("library.json")
     for book in books:
         if book.id == book_id:
@@ -85,6 +152,9 @@ def change_status(book_id, new_status):
 
 
 def print_menu():
+    """
+    Отображение меню для пользователя.
+    """
     print("1. Добавить книгу")
     print("2. Удалить книгу")
     print("3. Поиск книги")
@@ -94,6 +164,9 @@ def print_menu():
 
 
 def main():
+    """
+    Главная функция, запускающая приложение.
+    """
     while True:
         print_menu()
         choice = input("Выберите действие: ")
