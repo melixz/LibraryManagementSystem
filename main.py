@@ -75,3 +75,39 @@ class Book:
                 print("Статус книги успешно изменен.")
                 return
         print("Книга с таким ID не найдена.")
+
+    def print_menu():
+        print("1. Добавить книгу")
+        print("2. Удалить книгу")
+        print("3. Поиск книги")
+        print("4. Отображение всех книг")
+        print("5. Изменение статуса книги")
+        print("6. Выход")
+
+    def main():
+        while True:
+            print_menu()
+            choice = input("Выберите действие: ")
+            if choice == "1":
+                title = input("Введите название книги: ")
+                author = input("Введите автора книги: ")
+                year = input("Введите год издания: ")
+                add_book(title, author, year)
+            elif choice == "2":
+                book_id = input("Введите ID книги для удаления: ")
+                delete_book(book_id)
+            elif choice == "3":
+                query = input("Введите поисковый запрос: ")
+                search_by = input("Искать по (title/author/year): ")
+                search_books(query, search_by)
+            elif choice == "4":
+                display_books()
+            elif choice == "5":
+                book_id = input("Введите ID книги для изменения статуса: ")
+                new_status = input("Введите новый статус (в наличии/выдана): ")
+                change_status(book_id, new_status)
+            elif choice == "6":
+                break
+
+    if __name__ == "__main__":
+        main()
