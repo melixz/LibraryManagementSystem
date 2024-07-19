@@ -38,3 +38,30 @@ class Book:
         books.append(new_book)
         save_books_to_file("library.json", books)
         print("Книга успешно добавлена.")
+
+    def delete_book(book_id):
+        books = load_books_from_file("library.json")
+        books = [book for book in books if book.id != book_id]
+        save_books_to_file("library.json", books)
+        print("Книга успешно удалена.")
+
+    def search_books(query, search_by):
+        books = load_books_from_file("library.json")
+        if search_by == "title":
+            results = [book for book in books if query.lower() in book.title.lower()]
+        elif search_by == "author":
+            results = [book for book in books if query.lower() in book.author.lower()]
+        elif search_by == "year":
+            results = [book for book in books if book.year == query]
+        else:
+            print("Неверный параметр поиска.")
+            return
+        for book in results:
+            print(
+                f"ID: {book.id}, Title: {book.title}, Author: {book.author}, Year: {book.year}, Status: {book.status}")
+
+    def display_books():
+        books = load_books_from_file("library.json")
+        for book in books:
+            print(
+                f"ID: {book.id}, Title: {book.title}, Author: {book.author}, Year: {book.year}, Status: {book.status}")
