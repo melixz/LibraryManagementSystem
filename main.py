@@ -84,12 +84,15 @@ def add_book(title: str, author: str, year: str) -> None:
         author (str): Автор книги.
         year (str): Год издания книги.
     """
-    books = load_books_from_file("library.json")
-    book_id = str(uuid.uuid4())
-    new_book = Book(book_id, title, author, year)
-    books.append(new_book)
-    save_books_to_file("library.json", books)
-    print("Книга успешно добавлена.")
+    try:
+        books = load_books_from_file("library.json")
+        book_id = str(uuid.uuid4())
+        new_book = Book(book_id, title, author, year)
+        books.append(new_book)
+        save_books_to_file("library.json", books)
+        print("Книга успешно добавлена.")
+    except Exception as e:
+        print(f"Ошибка при добавлении книги: {e}")
 
 
 def delete_book(book_id: str) -> None:
@@ -99,10 +102,16 @@ def delete_book(book_id: str) -> None:
     Args:
         book_id (str): Уникальный идентификатор книги.
     """
-    books = load_books_from_file("library.json")
-    books = [book for book in books if book.id != book_id]
-    save_books_to_file("library.json", books)
-    print("Книга успешно удалена.")
+    try:
+        books = load_books_from_file("library.json")
+        if not any(book.id == book_id for book in books):
+            print("Книга с таким ID не найдена.")
+            return
+        books = [book for book in books if book.id != book_id]
+        save_books_to_file("library.json", books)
+        print("Книга успешно удалена.")
+    except Exception as e:
+        print(f"Ошибка при удалении книги: {e}")
 
 
 def search_books(query: str, search_by: str) -> List[Book]:
@@ -116,28 +125,39 @@ def search_books(query: str, search_by: str) -> List[Book]:
     Returns:
         list: Список найденных книг.
     """
-    books = load_books_from_file("library.json")
-    if search_by == "title":
-        results = [book for book in books if query.lower() in book.title.lower()]
-    elif search_by == "author":
-        results = [book for book in books if query.lower() in book.author.lower()]
-    elif search_by == "year":
-        results = [book for book in books if book.year == query]
-    else:
-        print("Неверный параметр поиска.")
+    try:
+        books = load_books_from_file("library.json")
+        if search_by == "title":
+            results = [book for book in books if query.lower() in book.title.lower()]
+        elif search_by == "author":
+            results = [book for book in books if query.lower() in book.author.lower()]
+        elif search_by == "year":
+            results = [book for book in books if book.year == query]
+        else:
+            print("Неверный параметр поиска.")
+            return []
+        for book in results:
+            print(
+                f"ID: {book.id}, Title: {book.title}, Author: {book.author}, Year: {book.year}, Status: {book.status}")
+        return results
+    except Exception as e:
+        print(f"Ошибка при поиске книг: {e}")
         return []
-    for book in results:
-        print(f"ID: {book.id}, Title: {book.title}, Author: {book.author}, Year: {book.year}, Status: {book.status}")
-    return results
 
 
 def display_books() -> None:
     """
     Отображение всех книг в библиотеке.
     """
-    books = load_books_from_file("library.json")
-    for book in books:
-        print(f"ID: {book.id}, Title: {book.title}, Author: {book.author}, Year: {book.year}, Status: {book.status}")
+    try:
+        books = load_books_from_file("library.json")
+        if not books:
+            print("Библиотека пуста.")
+        for book in books:
+            print(
+                f"ID: {book.id}, Title: {book.title}, Author: {book.author}, Year: {book.year}, Status: {book.status}")
+    except Exception as e:
+        print(f"Ошибка при отображении книг: {e}")
 
 
 def change_status(book_id: str, new_status: str) -> None:
@@ -148,14 +168,17 @@ def change_status(book_id: str, new_status: str) -> None:
         book_id (str): Уникальный идентификатор книги.
         new_status (str): Новый статус книги ("в наличии" или "выдана").
     """
-    books = load_books_from_file("library.json")
-    for book in books:
-        if book.id == book_id:
-            book.status = new_status
-            save_books_to_file("library.json", books)
-            print("Статус книги успешно изменен.")
-            return
-    print("Книга с таким ID не найдена.")
+    try:
+        books = load_books_from_file("library.json")
+        for book in books:
+            if book.id == book_id:
+                book.status = new_status
+                save_books_to_file("library.json", books)
+                print("Статус книги успешно изменен.")
+                return
+        print("Книга с таким ID не найдена.")
+    except Exception as e:
+        print(f"Ошибка при изменении статуса книги: {e}")
 
 
 def print_menu() -> None:
@@ -197,6 +220,8 @@ def main() -> None:
             change_status(book_id, new_status)
         elif choice == "6":
             break
+        else:
+            print("Неверный выбор. Пожалуйста, выберите действие от 1 до 6.")
 
 
 if __name__ == "__main__":
