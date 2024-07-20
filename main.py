@@ -1,11 +1,12 @@
 import uuid
 import json
+from typing import List, Dict
 
 
 class Book:
     """Класс для представления книги в библиотеке."""
 
-    def __init__(self, id, title, author, year, status="в наличии"):
+    def __init__(self, id: str, title: str, author: str, year: str, status: str = "в наличии"):
         """
         Инициализация книги.
 
@@ -22,7 +23,7 @@ class Book:
         self.year = year
         self.status = status
 
-    def to_dict(self):
+    def to_dict(self) -> Dict[str, str]:
         """
         Преобразование объекта книги в словарь.
 
@@ -38,7 +39,7 @@ class Book:
         }
 
 
-def load_books_from_file(filename):
+def load_books_from_file(filename: str) -> List[Book]:
     """
     Загрузка книг из файла.
 
@@ -50,13 +51,19 @@ def load_books_from_file(filename):
     """
     try:
         with open(filename, 'r', encoding='utf-8') as file:
-            books_data = json.load(file)
+            content = file.read()
+            if not content:  # Если файл пуст
+                return []
+            books_data = json.loads(content)
             return [Book(**data) for data in books_data]
     except FileNotFoundError:
         return []
+    except json.JSONDecodeError:
+        print(f"Ошибка при чтении файла {filename}. Файл может быть поврежден.")
+        return []
 
 
-def save_books_to_file(filename, books):
+def save_books_to_file(filename: str, books: List[Book]) -> None:
     """
     Сохранение книг в файл.
 
@@ -68,7 +75,7 @@ def save_books_to_file(filename, books):
         json.dump([book.to_dict() for book in books], file, ensure_ascii=False, indent=4)
 
 
-def add_book(title, author, year):
+def add_book(title: str, author: str, year: str) -> None:
     """
     Добавление книги в библиотеку.
 
@@ -85,7 +92,7 @@ def add_book(title, author, year):
     print("Книга успешно добавлена.")
 
 
-def delete_book(book_id):
+def delete_book(book_id: str) -> None:
     """
     Удаление книги из библиотеки по ID.
 
@@ -98,7 +105,7 @@ def delete_book(book_id):
     print("Книга успешно удалена.")
 
 
-def search_books(query, search_by):
+def search_books(query: str, search_by: str) -> List[Book]:
     """
     Поиск книг в библиотеке.
 
@@ -124,7 +131,7 @@ def search_books(query, search_by):
     return results
 
 
-def display_books():
+def display_books() -> None:
     """
     Отображение всех книг в библиотеке.
     """
@@ -133,7 +140,7 @@ def display_books():
         print(f"ID: {book.id}, Title: {book.title}, Author: {book.author}, Year: {book.year}, Status: {book.status}")
 
 
-def change_status(book_id, new_status):
+def change_status(book_id: str, new_status: str) -> None:
     """
     Изменение статуса книги в библиотеке.
 
@@ -151,7 +158,7 @@ def change_status(book_id, new_status):
     print("Книга с таким ID не найдена.")
 
 
-def print_menu():
+def print_menu() -> None:
     """
     Отображение меню для пользователя.
     """
@@ -163,7 +170,7 @@ def print_menu():
     print("6. Выход")
 
 
-def main():
+def main() -> None:
     """
     Главная функция, запускающая приложение.
     """
