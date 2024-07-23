@@ -9,6 +9,9 @@ from library.library import (
     display_books,
 )
 from library.file_handler import load_books_from_file, save_books_to_file
+from io import StringIO
+import sys
+import os
 
 
 class TestLibraryManagementSystem(unittest.TestCase):
@@ -22,8 +25,6 @@ class TestLibraryManagementSystem(unittest.TestCase):
         save_books_to_file("test_library.json", self.test_books)
 
     def tearDown(self):
-        import os
-
         os.remove("test_library.json")
 
     def test_add_book(self):
@@ -61,13 +62,14 @@ class TestLibraryManagementSystem(unittest.TestCase):
         self.assertEqual(books[0].status, "выдана")
 
     def test_display_books(self):
-        from io import StringIO
-        import sys
-
         captured_output = StringIO()
+        original_stdout = sys.stdout
         sys.stdout = captured_output
-        display_books("test_library.json")
-        sys.stdout = sys.__stdout__
+        try:
+            display_books("test_library.json")
+        finally:
+            sys.stdout = original_stdout
+
         output = captured_output.getvalue().strip()
         self.assertIn("Test Book 1", output)
         self.assertIn("Test Book 2", output)
