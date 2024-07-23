@@ -1,6 +1,7 @@
 from typing import List
 from library.book import Book
 from library.file_handler import load_books_from_file, save_books_to_file
+from library.exceptions import BookNotFoundError, InvalidSearchParameterError
 
 
 def add_book(
@@ -32,8 +33,7 @@ def delete_book(book_id: str, filename: str = "library.json") -> None:
     """
     books = load_books_from_file(filename)
     if not any(book.id == book_id for book in books):
-        print("Книга с таким ID не найдена.")
-        return
+        raise BookNotFoundError(book_id)
     books = [book for book in books if book.id != book_id]
     save_books_to_file(filename, books)
     print("Книга успешно удалена.")
@@ -61,8 +61,8 @@ def search_books(
     elif search_by == "год издания":
         results = [book for book in books if book.year == query]
     else:
-        print("Неверный параметр поиска.")
-        return []
+        raise InvalidSearchParameterError(search_by)
+
     if not results:
         print("Книги не найдены.")
     for book in results:
@@ -106,4 +106,4 @@ def change_status(
             save_books_to_file(filename, books)
             print("Статус книги успешно изменен.")
             return
-    print("Книга с таким ID не найдена.")
+    raise BookNotFoundError(book_id)

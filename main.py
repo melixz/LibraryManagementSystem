@@ -5,6 +5,11 @@ from library.library import (
     display_books,
     change_status,
 )
+from library.exceptions import (
+    BookNotFoundError,
+    InvalidSearchParameterError,
+    FileProcessingError,
+)
 
 
 def print_menu() -> None:
@@ -39,10 +44,18 @@ def main() -> None:
             title = input("Введите название книги: ")
             author = input("Введите автора книги: ")
             year = input("Введите год издания: ")
-            add_book(title, author, year)
+            try:
+                add_book(title, author, year)
+            except FileProcessingError as e:
+                print(e)
         elif choice == "2":
             book_id = input("Введите ID книги для удаления: ")
-            delete_book(book_id)
+            try:
+                delete_book(book_id)
+            except BookNotFoundError as e:
+                print(e)
+            except FileProcessingError as e:
+                print(e)
         elif choice == "3":
             print_search_menu()
             search_choice = input("Выберите категорию поиска: ")
@@ -56,13 +69,26 @@ def main() -> None:
                 print("Неверный выбор. Пожалуйста, выберите категорию от 1 до 3.")
                 continue
             query = input("Введите поисковый запрос: ")
-            search_books(query, search_by)
+            try:
+                search_books(query, search_by)
+            except InvalidSearchParameterError as e:
+                print(e)
+            except FileProcessingError as e:
+                print(e)
         elif choice == "4":
-            display_books()
+            try:
+                display_books()
+            except FileProcessingError as e:
+                print(e)
         elif choice == "5":
             book_id = input("Введите ID книги для изменения статуса: ")
             new_status = input("Введите новый статус (в наличии/выдана): ")
-            change_status(book_id, new_status)
+            try:
+                change_status(book_id, new_status)
+            except BookNotFoundError as e:
+                print(e)
+            except FileProcessingError as e:
+                print(e)
         elif choice == "6":
             break
         else:

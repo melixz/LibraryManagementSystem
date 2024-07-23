@@ -1,6 +1,7 @@
 import json
 from typing import List
 from library.book import Book
+from library.exceptions import FileProcessingError
 
 
 def load_books_from_file(filename: str) -> List[Book]:
@@ -23,8 +24,7 @@ def load_books_from_file(filename: str) -> List[Book]:
     except FileNotFoundError:
         return []
     except json.JSONDecodeError:
-        print(f"Ошибка при чтении файла {filename}. Файл может быть поврежден.")
-        return []
+        raise FileProcessingError(filename)
 
 
 def save_books_to_file(filename: str, books: List[Book]) -> None:
@@ -35,7 +35,10 @@ def save_books_to_file(filename: str, books: List[Book]) -> None:
         filename (str): Имя файла для сохранения данных.
         books (list): Список объектов Book для сохранения.
     """
-    with open(filename, "w", encoding="utf-8") as file:
-        json.dump(
-            [book.to_dict() for book in books], file, ensure_ascii=False, indent=4
-        )
+    try:
+        with open(filename, "w", encoding="utf-8") as file:
+            json.dump(
+                [book.to_dict() for book in books], file, ensure_ascii=False, indent=4
+            )
+    except Exception:
+        raise FileProcessingError(filename)
