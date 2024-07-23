@@ -1,7 +1,8 @@
 import uuid
 import unittest
-from main import Book, add_book, delete_book, search_books, change_status, load_books_from_file, \
-    save_books_to_file
+from library.book import Book
+from library.library import add_book, delete_book, search_books, change_status, display_books
+from library.file_handler import load_books_from_file, save_books_to_file
 
 
 class TestLibraryManagementSystem(unittest.TestCase):
@@ -51,6 +52,18 @@ class TestLibraryManagementSystem(unittest.TestCase):
         change_status(book_id, "выдана", "test_library.json")
         books = load_books_from_file("test_library.json")
         self.assertEqual(books[0].status, "выдана")
+
+    def test_display_books(self):
+        from io import StringIO
+        import sys
+        captured_output = StringIO()
+        sys.stdout = captured_output
+        display_books("test_library.json")
+        sys.stdout = sys.__stdout__
+        output = captured_output.getvalue().strip()
+        self.assertIn("Test Book 1", output)
+        self.assertIn("Test Book 2", output)
+        self.assertIn("Test Book 3", output)
 
 
 if __name__ == "__main__":
