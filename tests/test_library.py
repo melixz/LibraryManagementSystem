@@ -1,7 +1,13 @@
 import uuid
 import unittest
 from library.book import Book
-from library.library import add_book, delete_book, search_books, change_status, display_books
+from library.library import (
+    add_book,
+    delete_book,
+    search_books,
+    change_status,
+    display_books,
+)
 from library.file_handler import load_books_from_file, save_books_to_file
 
 
@@ -11,12 +17,13 @@ class TestLibraryManagementSystem(unittest.TestCase):
         self.test_books = [
             Book(str(uuid.uuid4()), "Test Book 1", "Author 1", "2001"),
             Book(str(uuid.uuid4()), "Test Book 2", "Author 2", "2002"),
-            Book(str(uuid.uuid4()), "Test Book 3", "Author 3", "2003")
+            Book(str(uuid.uuid4()), "Test Book 3", "Author 3", "2003"),
         ]
         save_books_to_file("test_library.json", self.test_books)
 
     def tearDown(self):
         import os
+
         os.remove("test_library.json")
 
     def test_add_book(self):
@@ -56,6 +63,7 @@ class TestLibraryManagementSystem(unittest.TestCase):
     def test_display_books(self):
         from io import StringIO
         import sys
+
         captured_output = StringIO()
         sys.stdout = captured_output
         display_books("test_library.json")

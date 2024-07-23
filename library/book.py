@@ -5,7 +5,9 @@ from typing import Dict
 class Book:
     """Класс для представления книги в библиотеке."""
 
-    def __init__(self, id: str, title: str, author: str, year: str, status: str = "в наличии"):
+    def __init__(
+        self, id: str, title: str, author: str, year: str, status: str = "в наличии"
+    ):
         """
         Инициализация книги.
 
@@ -34,11 +36,11 @@ class Book:
             "title": self.title,
             "author": self.author,
             "year": self.year,
-            "status": self.status
+            "status": self.status,
         }
 
     @staticmethod
-    def create(title: str, author: str, year: str) -> 'Book':
+    def create(title: str, author: str, year: str) -> "Book":
         """
         Создание новой книги с уникальным идентификатором.
 

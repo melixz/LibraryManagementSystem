@@ -1,4 +1,10 @@
-from library.library import add_book, delete_book, search_books, display_books, change_status
+from library.library import (
+    add_book,
+    delete_book,
+    search_books,
+    display_books,
+    change_status,
+)
 
 
 def print_menu() -> None:

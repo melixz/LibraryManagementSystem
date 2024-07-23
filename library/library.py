@@ -3,7 +3,9 @@ from library.book import Book
 from library.file_handler import load_books_from_file, save_books_to_file
 
 
-def add_book(title: str, author: str, year: str, filename: str = "library.json") -> None:
+def add_book(
+    title: str, author: str, year: str, filename: str = "library.json"
+) -> None:
     """
     Добавление книги в библиотеку.
 
@@ -37,7 +39,9 @@ def delete_book(book_id: str, filename: str = "library.json") -> None:
     print("Книга успешно удалена.")
 
 
-def search_books(query: str, search_by: str, filename: str = "library.json") -> List[Book]:
+def search_books(
+    query: str, search_by: str, filename: str = "library.json"
+) -> List[Book]:
     """
     Поиск книг в библиотеке.
 
@@ -63,7 +67,8 @@ def search_books(query: str, search_by: str, filename: str = "library.json") -> 
         print("Книги не найдены.")
     for book in results:
         print(
-            f"ID: {book.id}, Title: {book.title}, Author: {book.author}, Year: {book.year}, Status: {book.status}")
+            f"ID: {book.id}, Title: {book.title}, Author: {book.author}, Year: {book.year}, Status: {book.status}"
+        )
     return results
 
 
@@ -79,10 +84,13 @@ def display_books(filename: str = "library.json") -> None:
         print("Библиотека пуста.")
     for book in books:
         print(
-            f"ID: {book.id}, Title: {book.title}, Author: {book.author}, Year: {book.year}, Status: {book.status}")
+            f"ID: {book.id}, Title: {book.title}, Author: {book.author}, Year: {book.year}, Status: {book.status}"
+        )
 
 
-def change_status(book_id: str, new_status: str, filename: str = "library.json") -> None:
+def change_status(
+    book_id: str, new_status: str, filename: str = "library.json"
+) -> None:
     """
     Изменение статуса книги в библиотеке.
 
